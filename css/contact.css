@@ -1,0 +1,233 @@
+/* ===== RESET ===== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  }
+
+/* ===== BODY ===== */
+body {
+font-family: Arial, sans-serif;
+background: #f5f6f8;
+}
+
+/* ===== TITRE ===== */
+.texte {
+text-align: center;
+margin: 60px 0 30px;
+}
+
+.texte h1 {
+font-size: 42px;
+color: #1f2937;
+margin-bottom: 10px;
+}
+
+.texte p {
+color: #6b7280;
+font-size: 16px;
+}
+
+/* ===== CONTENEUR PRINCIPAL ===== */
+.contact-container {
+display: grid;
+grid-template-columns: 1fr 2fr;
+gap: 30px;
+padding: 40px;
+max-width: 1200px;
+margin: auto;
+}
+
+/* ===== PARTIE GAUCHE ===== */
+.contact {
+display: flex;
+flex-direction: column;
+gap: 20px;
+}
+
+/* CARTES */
+.contact div {
+background: #ffffff;
+padding: 20px;
+border-radius: 12px;
+display: flex;
+align-items: center;
+gap: 15px;
+box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+transition: transform 0.2s ease;
+}
+
+.contact div:hover {
+transform: translateY(-3px);
+}
+
+/* ICONE */
+.contact div::before {
+width: 45px;
+height: 45px;
+background: #f59e0b;
+color: white;
+display: flex;
+align-items: center;
+justify-content: center;
+border-radius: 10px;
+font-size: 18px;
+}
+
+/* ICONES DIFFERENTES */
+.adresse::before { content: "📍"; }
+.telephone::before { content: "📞"; }
+.email::before { content: "✉️"; }
+.horaires::before { content: "⏰"; }
+
+/* TEXTE */
+.contact h3 {
+font-size: 16px;
+margin: 0;
+}
+
+.contact p {
+margin-top: 5px;
+color: #6b7280;
+font-size: 14px;
+}
+
+/* ===== PARTIE DROITE ===== */
+.contact-form {
+background: #ffffff;
+padding: 30px;
+border-radius: 12px;
+box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.contact-form h2 {
+margin-bottom: 20px;
+color: #1f2937;
+}
+
+/* ===== FORMULAIRE ===== */
+.contact-form form {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 20px;
+}
+
+/* INPUTS */
+.contact-form input,
+.contact-form textarea {
+width: 100%;
+padding: 12px;
+border-radius: 10px;
+border: 1px solid #ddd;
+font-size: 14px;
+outline: none;
+transition: 0.2s;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+border-color: #f59e0b;
+}
+
+/* PLEINE LARGEUR */
+.sujet,
+.message,
+.bouton {
+grid-column: span 2;
+}
+
+/* TEXTAREA */
+textarea {
+resize: none;
+}
+
+/* BOUTON */
+button {
+width: 100%;
+padding: 15px;
+border-radius: 10px;
+border: none;
+background: linear-gradient(to right, #f59e0b, #d97706);
+color: white;
+font-size: 16px;
+cursor: pointer;
+transition: 0.3s;
+}
+
+button:hover {
+opacity: 0.9;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+
+```
+.contact-container {
+    grid-template-columns: 1fr;
+}
+
+.contact-form form {
+    grid-template-columns: 1fr;
+}
+```
+
+}
+
+
+
+
+/* Footer */
+footer {
+    background:rgb(0, 0, 255) ;
+    color: white;
+    display: flex;
+    justify-content: space-around; /* espace entre les blocs */
+    align-items: flex-start;
+    padding: 40px 20px;
+    flex-wrap: wrap; /* responsive */
+}
+
+/* Blocs */
+footer .service,
+footer .contact {
+    max-width: 300px;
+}
+/* Blocs */
+footer .service,
+footer .contact {
+    max-width: 300px;
+}
+
+/* Titres */
+footer .service p:first-child,
+footer .contact p:first-child {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+/* Textes */
+footer p {
+    margin: 5px 0;
+}
+
+/* Icônes */
+footer i {
+    margin-right: 8px;
+}
+
+/* Contact aligné (icône + texte) */
+.contact {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Ligne icône + texte */
+.contact i {
+    display: inline-block;
+}
+
+.contact p {
+    display: inline-block;
+}
