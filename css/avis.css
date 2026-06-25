@@ -1,0 +1,154 @@
+/* ================================================================
+   IMMO-LOCATION — Page Avis & Témoignages CSS
+   ================================================================ */
+
+.avis-header-box {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: var(--space-xl);
+  align-items: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2xl);
+  margin-bottom: var(--space-2xl);
+}
+
+@media (max-width: 900px) {
+  .avis-header-box {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+    text-align: center;
+  }
+}
+
+.avis-score-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-right: 1px solid var(--border);
+  padding-right: var(--space-xl);
+}
+
+@media (max-width: 900px) {
+  .avis-score-left {
+    border-right: none;
+    padding-right: 0;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: var(--space-md);
+  }
+}
+
+.avis-score-num {
+  font-size: 4rem;
+  font-weight: 900;
+  color: var(--white);
+  line-height: 1;
+}
+
+.avis-score-stars {
+  color: var(--primary);
+  font-size: 1.1rem;
+  margin: var(--space-xs) 0;
+}
+
+.avis-score-label {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+/* Progress bars */
+.avis-histogram {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.histogram-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
+.histogram-label {
+  width: 50px;
+  text-align: right;
+  font-weight: 500;
+}
+
+.histogram-bar-bg {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.histogram-bar-fill {
+  height: 100%;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-full);
+  width: 0%;
+  transition: width 1s ease-in-out;
+}
+
+.histogram-count {
+  width: 40px;
+}
+
+/* Add review form */
+.avis-submit-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+}
+
+.avis-form-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: var(--space-xs);
+}
+
+/* Star Rating Selector */
+.star-rating-select {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: var(--space-xs);
+  margin: var(--space-sm) 0 var(--space-md);
+}
+
+.star-rating-select input {
+  display: none;
+}
+
+.star-rating-select label {
+  font-size: 1.8rem;
+  color: var(--text-disabled);
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.star-rating-select label:hover,
+.star-rating-select label:hover ~ label,
+.star-rating-select input:checked ~ label {
+  color: var(--primary);
+}
+
+/* Grid layout for all user reviews */
+.avis-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: var(--space-lg);
+  margin-top: var(--space-2xl);
+}
+
+@media (max-width: 600px) {
+  .avis-grid {
+    grid-template-columns: 1fr;
+  }
+}

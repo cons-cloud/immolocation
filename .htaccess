@@ -1,0 +1,12 @@
+Options -Indexes
+RewriteEngine On
+
+# Rediriger / vers page/acceuil.php
+RewriteRule ^$ page/acceuil.php [L,R=302]
+
+# Gérer les fichiers qui existent
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Sécurité : bloquer accès au .git
+RedirectMatch 404 /\.git

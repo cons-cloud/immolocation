@@ -1,43 +1,102 @@
-.car-card{
-    width:300px;
-    background:white;
-    border-radius:15px;
-    overflow:hidden;
-    box-shadow:0 4px 15px rgba(0,0,0,0.1);
+/* ================================================================
+   IMMO-LOCATION — voiture.css — Car listing card styles
+   ================================================================ */
+
+.cars-listing-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
 }
 
-.car-card img{
-    width:100%;
-    height:200px;
-    object-fit:cover;
+@media (max-width: 900px) { .cars-listing-grid { grid-template-columns: 1fr; } }
+
+.car-listing-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
 }
 
-.card-content{
-    padding:15px;
+.car-listing-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
 }
 
-.buttons{
-    display:flex;
-    gap:10px;
-    margin-top:15px;
+.car-listing-image {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
-.btn-view,
-.btn-book{
-    flex:1;
-    text-align:center;
-    padding:10px;
-    border-radius:8px;
-    text-decoration:none;
+.car-listing-image img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s;
 }
 
+.car-listing-card:hover .car-listing-image img { transform: scale(1.05); }
 
+.car-badges {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  display: flex;
+  gap: 0.4rem;
+}
 
+.car-listing-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
 
+.car-listing-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
 
-.cars-container{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 30px;
+.car-listing-title {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.car-specs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.car-spec {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  background: var(--glass);
+  border-radius: 8px;
+  padding: 0.4rem 0.6rem;
+}
+
+.car-spec i { color: var(--primary); font-size: 0.75rem; }
+
+.car-listing-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
 }
