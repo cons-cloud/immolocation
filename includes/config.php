@@ -2,13 +2,14 @@
 // ============================================================
 //  CONFIG BASE DE DONNÉES — Immo-Location
 //  Variables d'environnement > valeurs locales
+//  Supporte DB_* (local) et MYSQL* (Railway)
 // ============================================================
 
-$host     = getenv('DB_HOST')     ?: '127.0.0.1';
-$user     = getenv('DB_USER')     ?: 'root';
-$password = getenv('DB_PASSWORD') ?: '';
-$dbname   = getenv('DB_NAME')     ?: 'immo_location';
-$port     = (int)(getenv('DB_PORT') ?: 3306);
+$host     = getenv('DB_HOST')     ?: getenv('MYSQLHOST')     ?: '127.0.0.1';
+$user     = getenv('DB_USER')     ?: getenv('MYSQLUSER')     ?: 'root';
+$password = getenv('DB_PASSWORD') ?: getenv('MYSQLPASSWORD') ?: '';
+$dbname   = getenv('DB_NAME')     ?: getenv('MYSQLDATABASE') ?: 'immo_location';
+$port     = (int)(getenv('DB_PORT') ?: getenv('MYSQLPORT')   ?: 3306);
 
 $conn = mysqli_connect($host, $user, $password, $dbname, $port);
 
