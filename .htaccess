@@ -1,8 +1,9 @@
 Options -Indexes
 RewriteEngine On
+RewriteBase /
 
 # Rediriger / vers page/acceuil.php
-RewriteRule ^$ page/acceuil.php [L,R=302]
+RewriteRule ^$ /page/acceuil.php [L,R=302]
 
 # Gérer les fichiers qui existent
 RewriteCond %{REQUEST_FILENAME} !-f

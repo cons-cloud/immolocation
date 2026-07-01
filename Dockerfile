@@ -20,8 +20,9 @@ COPY . /var/www/html/
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html
 
-# Configuration Apache : autoriser .htaccess
-RUN sed -i 's|AllowOverride None|AllowOverride All|g' /etc/apache2/apache2.conf
+# Configuration Apache : autoriser .htaccess et définir ServerName
+RUN sed -i 's|AllowOverride None|AllowOverride All|g' /etc/apache2/apache2.conf \
+    && echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 EXPOSE 80
 
