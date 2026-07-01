@@ -8,7 +8,9 @@
 
   async function checkNotifications() {
     try {
-      const prefix = window.pathPrefix || '';
+      // Determine prefix: use injected pathPrefix, or auto-detect from URL depth
+      const prefix = window.pathPrefix ||
+        (location.pathname.split('/').length > 3 ? '../../' : '../');
       const res = await fetch(`${prefix}php/api/notifications.php?action=list`);
       const data = await res.json();
       

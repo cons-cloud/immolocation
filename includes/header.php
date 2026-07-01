@@ -73,6 +73,46 @@ $current_page = basename($_SERVER['PHP_SELF']);
         Contact
       </a>
     </li>
+
+    <!-- Mobile-only links for logged-in user -->
+    <?php if (isset($_SESSION['user_id'])): ?>
+      <li class="mobile-only">
+        <?php if ($_SESSION['type_compte'] === 'admin'): ?>
+          <a href="<?php echo $path_prefix; ?>page/dash/admin.php" class="nav-link <?php echo ($current_page === 'admin.php') ? 'active' : ''; ?>">
+            <i class="fa-solid fa-gauge"></i> Dashboard Admin
+          </a>
+        <?php elseif ($_SESSION['type_compte'] === 'proprietaire'): ?>
+          <a href="<?php echo $path_prefix; ?>page/dash/proprio.php" class="nav-link <?php echo ($current_page === 'proprio.php') ? 'active' : ''; ?>">
+            <i class="fa-solid fa-gauge"></i> Mon Dashboard
+          </a>
+        <?php else: ?>
+          <a href="<?php echo $path_prefix; ?>page/dash/client.php" class="nav-link <?php echo ($current_page === 'client.php') ? 'active' : ''; ?>">
+            <i class="fa-solid fa-gauge"></i> Mon Espace
+          </a>
+        <?php endif; ?>
+      </li>
+      <li class="mobile-only">
+        <a href="<?php echo $path_prefix; ?>page/favoris.php" class="nav-link <?php echo ($current_page === 'favoris.php') ? 'active' : ''; ?>">
+          <i class="fa-solid fa-heart"></i> Mes Favoris
+        </a>
+      </li>
+    <?php endif; ?>
+
+    <!-- Mobile-only actions (Connexion, S'inscrire or Déconnexion) -->
+    <li class="nav-menu-mobile-actions">
+      <?php if (isset($_SESSION['user_id'])): ?>
+        <a href="<?php echo $path_prefix; ?>php/logout.php" class="btn btn-danger">
+          <i class="fa-solid fa-right-from-bracket"></i> Déconnexion
+        </a>
+      <?php else: ?>
+        <a href="<?php echo $path_prefix; ?>page/connexion.php" class="btn btn-secondary">
+          <i class="fa-solid fa-right-to-bracket"></i> Connexion
+        </a>
+        <a href="<?php echo $path_prefix; ?>page/inscription.php" class="btn btn-primary">
+          <i class="fa-solid fa-user-plus"></i> S'inscrire
+        </a>
+      <?php endif; ?>
+    </li>
   </ul>
 
   <div class="nav-actions">

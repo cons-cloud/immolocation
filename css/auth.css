@@ -406,3 +406,42 @@
 }
 .type-btn.active i, .type-btn:hover i { color: var(--primary); }
 .type-btn.active span, .type-btn:hover span { color: var(--primary); }
+
+.auth-right {
+  position: relative;
+}
+
+/* Back to Home Link */
+.auth-back-home {
+  position: absolute;
+  top: 1.5rem;
+  left: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all var(--transition-base);
+  z-index: 10;
+  text-decoration: none;
+}
+
+.auth-back-home:hover {
+  color: var(--primary);
+  transform: translateX(-4px);
+}
+
+.auth-back-home i {
+  font-size: 0.8rem;
+}
+
+@media (max-width: 900px) {
+  .auth-back-home {
+    top: 1rem;
+    left: 1.5rem;
+  }
+  .auth-right {
+    padding-top: 5rem;
+  }
+}

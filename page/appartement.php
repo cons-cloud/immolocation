@@ -35,6 +35,8 @@ $biens = mysqli_query($conn, "SELECT b.*, u.prenom, u.nom FROM biens b JOIN util
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="../image/favicon.png">
+  <link rel="apple-touch-icon" href="../image/favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Location d'Appartements à Meknès & Maroc — Immo-Location</title>
   <meta name="description" content="Découvrez notre sélection d'appartements à louer au Maroc. Logements modernes, prix transparents, réservation en ligne.">

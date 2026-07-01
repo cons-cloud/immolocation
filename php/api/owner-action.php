@@ -19,7 +19,7 @@ if ($action === 'booking_status') {
     if ($res_id > 0 && in_array($status, ['confirmee', 'annulee'])) {
         // First verify that this booking belongs to an asset owned by this owner
         $check_q = mysqli_query($conn, "
-            SELECT r.id, r.client_id, r.numero_reservation, 
+            SELECT r.id, r.client_id, r.numero_reservation, r.type_reservation, r.bien_id, r.voiture_id, r.date_debut, r.date_fin,
                    IF(r.type_reservation='bien', b.titre, CONCAT(v.marque, ' ', v.modele)) as item_title
             FROM reservations r
             LEFT JOIN biens b ON r.bien_id = b.id AND r.type_reservation='bien'
@@ -34,7 +34,17 @@ if ($action === 'booking_status') {
             if (mysqli_stmt_execute($stmt)) {
                 // If cancelled, remove dates from disponibilites
                 if ($status === 'annulee') {
-                    mysqli_query($conn, "DELETE FROM disponibilites WHERE raison='reservation' AND type_ressource=(SELECT type_reservation FROM reservations WHERE id=$res_id) AND ressource_id=IFNULL((SELECT bien_id FROM reservations WHERE id=$res_id), (SELECT voiture_id FROM reservations WHERE id=$res_id))");
+                    $target_id = ($booking['type_reservation'] === 'bien') ? $booking['bien_id'] : $booking['voiture_id'];
+                    $del_disp = mysqli_prepare($conn, "
+                        DELETE FROM disponibilites 
+                        WHERE raison='reservation' 
+                          AND type_ressource = ? 
+                          AND ressource_id = ? 
+                          AND date_debut = ? 
+                          AND date_fin = ?
+                    ");
+                    mysqli_stmt_bind_param($del_disp, 'siss', $booking['type_reservation'], $target_id, $booking['date_debut'], $booking['date_fin']);
+                    mysqli_stmt_execute($del_disp);
                 }
                 
                 // Notify client

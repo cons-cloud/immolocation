@@ -245,9 +245,9 @@ CREATE TABLE IF NOT EXISTS disponibilites (
 -- DONNÉES DE TEST
 -- ─────────────────────────────────────────
 
--- Admin par défaut (mot de passe: Admin123!)
+-- Admin par défaut (mot de passe: Nourdine1@)
 INSERT INTO utilisateurs (prenom, nom, email, mot_de_passe, type_compte, statut, email_verifie)
-VALUES ('Admin', 'Immo', 'admin@immolocation.ma', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 'actif', 1);
+VALUES ('Nourdine', 'Admin', 'nourdine@gmail.com', '$2y$12$oDPtPdBDKKPwkksSiyDdUuCQrfV80ShESIxp0e6rabqj9e5EG4d0W', 'admin', 'actif', 1);
 
 -- Propriétaire de test (mot de passe: Test123!)
 INSERT INTO utilisateurs (prenom, nom, email, telephone, mot_de_passe, type_compte, ville, statut, email_verifie)

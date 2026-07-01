@@ -132,60 +132,118 @@ document.addEventListener('DOMContentLoaded', () => {
       if (current >= target) clearInterval(timer);
     }, 16);
   }
+});
 
-  // ── 5. TOAST SYSTEM ──────────────────────────────────────────
-  window.showToast = function(message, type = 'info', title = '', duration = 4000) {
-    let container = document.getElementById('toast-container');
-    if (!container) {
-      container = document.createElement('div');
-      container.id = 'toast-container';
-      document.body.appendChild(container);
-    }
-
-    const icons = {
-      success: 'fa-check',
-      error:   'fa-xmark',
-      info:    'fa-info',
-      warning: 'fa-triangle-exclamation'
-    };
-
-    const titles = {
-      success: title || 'Succès',
-      error:   title || 'Erreur',
-      info:    title || 'Information',
-      warning: title || 'Attention'
-    };
-
-    const toast = document.createElement('div');
-    toast.className = `toast toast-${type}`;
-    toast.innerHTML = `
-      <div class="toast-icon"><i class="fa-solid ${icons[type]}"></i></div>
-      <div class="toast-content">
-        <div class="toast-title">${titles[type]}</div>
-        <div class="toast-msg">${message}</div>
-      </div>
-      <div class="toast-close"><i class="fa-solid fa-xmark"></i></div>
-    `;
-
-    container.appendChild(toast);
-
-    toast.querySelector('.toast-close').addEventListener('click', () => {
-      removeToast(toast);
-    });
-
-    if (duration > 0) {
-      setTimeout(() => removeToast(toast), duration);
-    }
-
-    return toast;
-  };
-
-  function removeToast(toast) {
-    toast.classList.add('hiding');
-    setTimeout(() => toast.remove(), 300);
+// ── 5. TOAST SYSTEM ──────────────────────────────────────────
+window.showToast = function(message, type = 'info', title = '', duration = 4000) {
+  let container = document.getElementById('toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toast-container';
+    document.body.appendChild(container);
   }
 
-  // ── 6. BACK TO TOP ───────────────────────────────────────────
+  const icons = {
+    success: 'fa-check',
+    error:   'fa-xmark',
+    info:    'fa-info',
+    warning: 'fa-triangle-exclamation'
+  };
+
+  const titles = {
+    success: title || 'Succès',
+    error:   title || 'Erreur',
+    info:    title || 'Information',
+    warning: title || 'Attention'
+  };
+
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  toast.innerHTML = `
+    <div class="toast-icon"><i class="fa-solid ${icons[type]}"></i></div>
+    <div class="toast-content">
+      <div class="toast-title">${titles[type]}</div>
+      <div class="toast-msg">${message}</div>
+    </div>
+    <div class="toast-close"><i class="fa-solid fa-xmark"></i></div>
+  `;
+
+  container.appendChild(toast);
+
+  toast.querySelector('.toast-close').addEventListener('click', () => {
+    removeToast(toast);
+  });
+
+  if (duration > 0) {
+    setTimeout(() => removeToast(toast), duration);
+  }
+
+  return toast;
+};
+
+function removeToast(toast) {
+  toast.classList.add('hiding');
+  setTimeout(() => toast.remove(), 300);
+}
+
+// ── 6. CONFIRM DIALOG (replaces native confirm()) ─────────────
+window.showConfirm = function({ title = 'Confirmer l\'action', message = 'Êtes-vous sûr ?', confirmText = 'Confirmer', cancelText = 'Annuler', type = 'danger' } = {}) {
+  return new Promise((resolve) => {
+    // Remove any existing confirm dialog
+    const existing = document.getElementById('confirm-dialog-overlay');
+    if (existing) existing.remove();
+
+    const icons = {
+      danger:  { icon: 'fa-triangle-exclamation', color: 'var(--danger)',  glow: 'var(--danger-glow)',  bg: 'rgba(255,77,109,0.12)' },
+      warning: { icon: 'fa-exclamation-circle',   color: 'var(--warning)', glow: 'rgba(255,190,11,0.2)',bg: 'rgba(255,190,11,0.12)' },
+      info:    { icon: 'fa-circle-info',           color: 'var(--info)',    glow: 'rgba(76,201,240,0.2)',bg: 'rgba(76,201,240,0.12)' },
+      success: { icon: 'fa-circle-check',          color: 'var(--success)', glow: 'var(--success-glow)', bg: 'rgba(0,212,170,0.12)' }
+    };
+    const cfg = icons[type] || icons.danger;
+
+    const btnConfirmClass = type === 'danger' ? 'btn-danger' : type === 'warning' ? 'btn-warning' : 'btn-primary';
+
+    const overlay = document.createElement('div');
+    overlay.id = 'confirm-dialog-overlay';
+    overlay.className = 'confirm-dialog-overlay';
+    overlay.innerHTML = `
+      <div class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirm-dialog-title">
+        <div class="confirm-dialog-icon-wrap" style="background:${cfg.bg};border-color:${cfg.color}30;">
+          <i class="fa-solid ${cfg.icon}" style="color:${cfg.color};"></i>
+        </div>
+        <h3 class="confirm-dialog-title" id="confirm-dialog-title">${title}</h3>
+        <p class="confirm-dialog-message">${message}</p>
+        <div class="confirm-dialog-actions">
+          <button class="btn btn-ghost confirm-cancel-btn" id="confirm-cancel-btn">${cancelText}</button>
+          <button class="btn ${btnConfirmClass} confirm-ok-btn" id="confirm-ok-btn">${confirmText}</button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+    document.body.style.overflow = 'hidden';
+
+    // Animate in
+    requestAnimationFrame(() => overlay.classList.add('active'));
+
+    const cleanup = (result) => {
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+      setTimeout(() => overlay.remove(), 300);
+      resolve(result);
+    };
+
+    overlay.querySelector('#confirm-ok-btn').addEventListener('click', () => cleanup(true));
+    overlay.querySelector('#confirm-cancel-btn').addEventListener('click', () => cleanup(false));
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) cleanup(false); });
+
+    // Focus confirm button for keyboard navigation
+    setTimeout(() => overlay.querySelector('#confirm-ok-btn').focus(), 50);
+  });
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  // ── 7. BACK TO TOP ───────────────────────────────────────────
   const backToTop = document.getElementById('back-to-top');
   if (backToTop) {
     window.addEventListener('scroll', () => {
@@ -220,16 +278,16 @@ document.addEventListener('DOMContentLoaded', () => {
           const icon = btn.querySelector('i');
           if (btn.classList.contains('active')) {
             icon.className = 'fa-solid fa-heart';
-            showToast('Ajouté à vos favoris !', 'success');
+            window.showToast('Ajouté à vos favoris !', 'success');
           } else {
             icon.className = 'fa-regular fa-heart';
-            showToast('Retiré de vos favoris', 'info');
+            window.showToast('Retiré de vos favoris', 'info');
           }
         } else if (data.redirect) {
           window.location.href = data.redirect;
         }
       } catch {
-        showToast('Connectez-vous pour ajouter aux favoris', 'warning');
+        window.showToast('Connectez-vous pour ajouter aux favoris', 'warning');
       }
     });
   });
@@ -239,6 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById(id);
     if (modal) {
       modal.classList.add('open');
+      modal.classList.add('active');
       document.body.style.overflow = 'hidden';
     }
   };
@@ -247,6 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById(id);
     if (modal) {
       modal.classList.remove('open');
+      modal.classList.remove('active');
       document.body.style.overflow = '';
     }
   };
@@ -354,6 +414,39 @@ document.addEventListener('DOMContentLoaded', () => {
       cursor.style.left = e.clientX + 'px';
       cursor.style.top  = e.clientY + 'px';
     }, { passive: true });
+  }
+
+  // ── 14. DASHBOARD SIDEBAR DRAWER TOGGLE (mobile) ───────────────
+  const sidebar = document.querySelector('.dash-sidebar');
+  const toggleBtn = document.getElementById('dashSidebarToggle');
+  if (sidebar && toggleBtn) {
+    // Create overlay dynamically if not exists
+    let overlay = document.querySelector('.dash-sidebar-overlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.className = 'dash-sidebar-overlay';
+      document.body.appendChild(overlay);
+    }
+
+    const openSidebar = () => {
+      sidebar.classList.add('open');
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    };
+
+    const closeSidebar = () => {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    };
+
+    toggleBtn.addEventListener('click', openSidebar);
+    overlay.addEventListener('click', closeSidebar);
+
+    const closeBtn = document.getElementById('dashSidebarClose');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', closeSidebar);
+    }
   }
 
   console.log('%c🏠 Immo-Location v2.0 — Powered by Excellence', 

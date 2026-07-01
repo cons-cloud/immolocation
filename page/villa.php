@@ -28,7 +28,9 @@ $biens = mysqli_query($conn,"SELECT b.*,u.prenom,u.nom FROM biens b JOIN utilisa
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="../image/favicon.png">
+  <link rel="apple-touch-icon" href="../image/favicon.png"><meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Location de Villas Luxe au Maroc — Immo-Location</title>
   <meta name="description" content="Villas de luxe à louer avec piscine, jardin et vue panoramique. Réservation instantanée.">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">

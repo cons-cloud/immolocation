@@ -56,6 +56,8 @@ $nb_avis = mysqli_fetch_assoc(mysqli_query($conn,"SELECT COUNT(*) as c FROM avis
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="../../image/favicon.png">
+  <link rel="apple-touch-icon" href="../../image/favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mon Espace — Immo-Location</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -73,6 +75,7 @@ $nb_avis = mysqli_fetch_assoc(mysqli_query($conn,"SELECT COUNT(*) as c FROM avis
 
       <!-- Sidebar -->
       <aside class="dash-sidebar">
+        <button class="dash-sidebar-close" id="dashSidebarClose"><i class="fa-solid fa-xmark"></i></button>
         <div class="dash-user-profile">
           <img class="dash-user-avatar"
                src="https://ui-avatars.com/api/?name=<?php echo urlencode($_SESSION['prenom'].' '.$_SESSION['nom']); ?>&background=141424&color=f5a623"
@@ -93,6 +96,12 @@ $nb_avis = mysqli_fetch_assoc(mysqli_query($conn,"SELECT COUNT(*) as c FROM avis
 
       <!-- Contenu -->
       <div class="dash-content">
+        <!-- Mobile Toggle Bar -->
+        <div class="dash-mobile-bar">
+          <button class="dash-sidebar-toggle-btn" id="dashSidebarToggle">
+            <i class="fa-solid fa-bars-staggered"></i> Menu Espace
+          </button>
+        </div>
 
         <?php if ($tab === 'overview'): ?>
         <div>
@@ -132,12 +141,12 @@ $nb_avis = mysqli_fetch_assoc(mysqli_query($conn,"SELECT COUNT(*) as c FROM avis
         <div class="chart-card">
           <h4 class="chart-card-title">Réservations récentes <a href="client.php?tab=reservations" class="btn btn-secondary btn-sm" style="font-size:0.78rem;">Voir tout</a></h4>
           <?php foreach ($recent_res as $rr): ?>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem 0;border-bottom:1px solid var(--border);">
-            <div>
-              <div style="font-weight:600;color:var(--white);font-size:0.92rem;"><?php echo htmlspecialchars($rr['item_title']); ?></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem 0;border-bottom:1px solid var(--border);gap:0.5rem;flex-wrap:wrap;">
+            <div style="min-width:0;flex:1;">
+              <div style="font-weight:600;color:var(--white);font-size:0.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><?php echo htmlspecialchars($rr['item_title']); ?></div>
               <div style="font-size:0.78rem;color:var(--text-secondary);"><?php echo date('d/m/Y',strtotime($rr['date_debut'])); ?> → <?php echo date('d/m/Y',strtotime($rr['date_fin'])); ?></div>
             </div>
-            <div style="text-align:right;">
+            <div style="text-align:right;flex-shrink:0;">
               <span class="badge <?php echo $rr['statut']==='confirmee'?'badge-success':($rr['statut']==='annulee'?'badge-danger':'badge-warning'); ?>" style="text-transform:capitalize;"><?php echo $rr['statut']; ?></span>
               <div style="font-size:0.82rem;color:var(--primary);font-weight:700;margin-top:2px;"><?php echo number_format($rr['prix_total'],0); ?> DH</div>
             </div>
@@ -149,7 +158,7 @@ $nb_avis = mysqli_fetch_assoc(mysqli_query($conn,"SELECT COUNT(*) as c FROM avis
         <!-- Quick explore -->
         <div class="chart-card">
           <h4 class="chart-card-title">Explorer la plateforme</h4>
-          <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:0.5rem;">
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.5rem;">
             <a href="../appartement.php" class="btn btn-secondary"><i class="fa-solid fa-building"></i> Appartements</a>
             <a href="../villa.php" class="btn btn-secondary"><i class="fa-solid fa-house-chimney"></i> Villas</a>
             <a href="../voiturre.php" class="btn btn-secondary"><i class="fa-solid fa-car"></i> Voitures</a>
@@ -202,7 +211,7 @@ $nb_avis = mysqli_fetch_assoc(mysqli_query($conn,"SELECT COUNT(*) as c FROM avis
 
         <?php if (!empty($mes_favoris_biens)): ?>
           <h3 style="color:var(--white);margin-bottom:1rem;"><i class="fa-solid fa-building" style="color:var(--primary);margin-right:8px;"></i>Hébergements sauvegardés</h3>
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;margin-bottom:2rem;">
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-bottom:2rem;">
             <?php foreach ($mes_favoris_biens as $f): ?>
             <div class="listing-card">
               <div class="listing-card-image" style="height:160px;">
@@ -223,7 +232,7 @@ $nb_avis = mysqli_fetch_assoc(mysqli_query($conn,"SELECT COUNT(*) as c FROM avis
 
         <?php if (!empty($mes_favoris_voit)): ?>
           <h3 style="color:var(--white);margin-bottom:1rem;"><i class="fa-solid fa-car" style="color:var(--accent);margin-right:8px;"></i>Véhicules sauvegardés</h3>
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;">
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;">
             <?php foreach ($mes_favoris_voit as $f): ?>
             <div class="listing-card">
               <div class="listing-card-image" style="height:160px;">
@@ -276,11 +285,11 @@ $nb_avis = mysqli_fetch_assoc(mysqli_query($conn,"SELECT COUNT(*) as c FROM avis
             }
         }
         ?>
-        <?php if ($update_success): ?><div class="alert" style="background:var(--success-glow);border:1px solid var(--success);border-radius:8px;padding:1rem;margin-bottom:1.5rem;color:var(--success);"><i class="fa-solid fa-circle-check"></i> Profil mis à jour avec succès !</div><?php endif; ?>
+        <?php if ($update_success): ?><div style="background:rgba(0,212,170,0.12);border:1px solid rgba(0,212,170,0.35);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.5rem;color:var(--success);display:flex;align-items:center;gap:0.75rem;"><i class="fa-solid fa-circle-check" style="font-size:1.2rem;"></i><div><strong>Profil mis à jour !</strong> Vos modifications ont été enregistrées avec succès.</div></div><?php endif; ?>
         <div class="glass-card" style="padding:var(--space-xl);">
           <form method="POST">
             <input type="hidden" name="update_profil" value="1">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div class="grid-2">
               <div class="form-group"><label class="form-label">Prénom</label><input type="text" name="prenom" class="form-control" value="<?php echo htmlspecialchars($u['prenom']); ?>" required></div>
               <div class="form-group"><label class="form-label">Nom</label><input type="text" name="nom" class="form-control" value="<?php echo htmlspecialchars($u['nom']); ?>" required></div>
               <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" value="<?php echo htmlspecialchars($u['email']); ?>" readonly style="opacity:0.6;cursor:not-allowed;"></div>

@@ -1,21 +1,30 @@
 /* ================================================================
-   IMMO-LOCATION — Unified Dashboards CSS
+   IMMO-LOCATION — Dashboard CSS v3.0
+   Fully Adaptive: 320px → 2560px
    ================================================================ */
+
+/* ─── LAYOUT ──────────────────────────────────────────────────── */
+
+/* Main container: force no overflow */
+main {
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.container {
+  width: 100%;
+  max-width: 1400px;
+}
 
 .dash-layout {
   display: grid;
   grid-template-columns: 260px 1fr;
-  min-height: calc(100vh - 80px);
   gap: var(--space-xl);
+  align-items: start;
+  min-height: calc(100vh - 120px);
 }
 
-@media (max-width: 900px) {
-  .dash-layout {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* --- SIDEBAR PANEL --- */
+/* ─── SIDEBAR ─────────────────────────────────────────────────── */
 .dash-sidebar {
   background: var(--bg-secondary);
   border: 1px solid var(--border);
@@ -25,6 +34,8 @@
   flex-direction: column;
   gap: var(--space-lg);
   height: fit-content;
+  position: sticky;
+  top: 2rem;
 }
 
 .dash-user-profile {
@@ -36,11 +47,13 @@
 }
 
 .dash-user-avatar {
-  width: 48px; height: 48px;
+  width: 48px;
+  height: 48px;
   border-radius: var(--radius-full);
   object-fit: cover;
   border: 2px solid var(--primary);
   background: var(--bg-card);
+  flex-shrink: 0;
 }
 
 .dash-user-name {
@@ -48,6 +61,9 @@
   font-weight: 700;
   color: var(--white);
   line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .dash-user-role {
@@ -72,6 +88,7 @@
   font-size: 0.92rem;
   font-weight: 500;
   transition: all var(--transition-base);
+  white-space: nowrap;
 }
 
 .dash-menu-link i {
@@ -79,6 +96,7 @@
   width: 20px;
   color: var(--primary);
   transition: transform var(--transition-spring);
+  flex-shrink: 0;
 }
 
 .dash-menu-link:hover {
@@ -99,15 +117,16 @@
   color: var(--white);
 }
 
-/* --- MAIN WORKSPACE --- */
+/* ─── MAIN WORKSPACE ──────────────────────────────────────────── */
 .dash-content {
   display: flex;
   flex-direction: column;
   gap: var(--space-xl);
+  min-width: 0;
 }
 
 .dash-page-title {
-  font-size: 1.8rem;
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
   font-weight: 800;
   color: var(--white);
   margin-bottom: 2px;
@@ -118,10 +137,10 @@
   color: var(--text-secondary);
 }
 
-/* --- STATS CARDS --- */
+/* ─── STATS CARDS ─────────────────────────────────────────────── */
 .dash-stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: var(--space-md);
 }
 
@@ -134,6 +153,7 @@
   justify-content: space-between;
   align-items: center;
   transition: all var(--transition-base);
+  min-width: 0;
 }
 
 .stat-widget:hover {
@@ -142,8 +162,13 @@
   transform: translateY(-2px);
 }
 
+.stat-widget-info {
+  min-width: 0;
+  flex: 1;
+}
+
 .stat-widget-info h3 {
-  font-size: 2rem;
+  font-size: clamp(1.4rem, 3vw, 2rem);
   font-weight: 800;
   color: var(--white);
   line-height: 1.2;
@@ -154,28 +179,30 @@
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .stat-widget-icon {
-  width: 50px; height: 50px;
+  width: 50px;
+  height: 50px;
   background: var(--primary-glow);
   color: var(--primary);
   border-radius: var(--radius-md);
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 1.3rem;
+  flex-shrink: 0;
+  margin-left: var(--space-sm);
 }
 
-/* --- CHARTS GRID --- */
+/* ─── CHARTS GRID ─────────────────────────────────────────────── */
 .dash-charts-grid {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: var(--space-md);
-}
-
-@media (max-width: 900px) {
-  .dash-charts-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 .chart-card {
@@ -183,6 +210,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: var(--space-lg);
+  min-width: 0;
 }
 
 .chart-card-title {
@@ -193,36 +221,43 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
-/* --- DARK PREMIUM TABLES --- */
+/* ─── TABLES ──────────────────────────────────────────────────── */
 .table-wrapper {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
   background: var(--bg-card);
+  /* Show scrollbar hint on mobile */
+  scrollbar-width: thin;
 }
 
 .dash-table {
   width: 100%;
+  min-width: 500px; /* Prevents columns from crushing */
   border-collapse: collapse;
   text-align: left;
 }
 
 .dash-table th {
   background: rgba(255,255,255,0.02);
-  padding: 1rem;
-  font-size: 0.82rem;
+  padding: 0.9rem 1rem;
+  font-size: 0.8rem;
   font-weight: 700;
   text-transform: uppercase;
   color: var(--primary);
   border-bottom: 1px solid var(--border);
   letter-spacing: 0.05em;
+  white-space: nowrap;
 }
 
 .dash-table td {
-  padding: 1rem;
-  font-size: 0.9rem;
+  padding: 0.9rem 1rem;
+  font-size: 0.88rem;
   color: var(--text-primary);
   border-bottom: 1px solid var(--border);
   vertical-align: middle;
@@ -233,7 +268,7 @@
 }
 
 .dash-table tr:hover td {
-  background: rgba(255, 255, 255, 0.01);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .table-user-cell {
@@ -243,91 +278,242 @@
 }
 
 .table-user-img {
-  width: 32px; height: 32px;
+  width: 32px;
+  height: 32px;
   border-radius: var(--radius-full);
   object-fit: cover;
+  flex-shrink: 0;
 }
 
 .table-user-name {
   font-weight: 600;
   font-size: 0.88rem;
+  white-space: nowrap;
 }
 
 .table-user-email {
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   color: var(--text-secondary);
+  white-space: nowrap;
 }
 
-/* --- MODAL POPUPS --- */
+/* ─── MODAL POPUPS (PREMIUM GLASSMORPHIC DESIGN) ───────────────── */
+@keyframes slideUp {
+  from {
+    transform: translateY(40px) scale(0.96);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
 .dash-modal {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(5,5,10,0.85);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(4, 4, 8, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: none;
   align-items: center;
   justify-content: center;
   z-index: var(--z-modal);
   opacity: 0;
   transition: opacity var(--transition-base);
+  padding: 1.5rem;
 }
 
-.dash-modal.active {
+.dash-modal.active,
+.dash-modal.open {
   display: flex;
   opacity: 1;
 }
 
 .dash-modal-container {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  max-width: 600px;
-  width: 90%;
-  max-height: 90vh;
+  background: linear-gradient(145deg, rgba(20, 20, 36, 0.96), rgba(12, 12, 24, 0.98));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 4px solid var(--primary); /* Gold header accent */
+  border-radius: 24px;
+  max-width: 650px;
+  width: 100%;
+  max-height: 85vh;
   overflow-y: auto;
-  box-shadow: var(--shadow-lg);
-  animation: slideUp var(--transition-spring);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 
+              inset 0 1px 0 rgba(255, 255, 255, 0.1),
+              0 0 40px rgba(245, 166, 35, 0.03);
+  animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  scrollbar-width: thin;
+}
+
+/* Custom modal scrollbars */
+.dash-modal-container::-webkit-scrollbar {
+  width: 6px;
+}
+.dash-modal-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.01);
+  border-radius: 0 0 24px 0;
+}
+.dash-modal-container::-webkit-scrollbar-thumb {
+  background: rgba(245, 166, 35, 0.25);
+  border-radius: var(--radius-full);
+}
+.dash-modal-container::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
 }
 
 .dash-modal-header {
-  padding: var(--space-lg);
+  padding: 1.5rem 2rem;
   border-bottom: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background: rgba(255, 255, 255, 0.01);
 }
 
 .dash-modal-title {
-  font-size: 1.25rem;
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
   font-weight: 700;
   color: var(--white);
+  letter-spacing: -0.01em;
 }
 
 .dash-modal-close {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   color: var(--text-secondary);
   cursor: pointer;
-  transition: color var(--transition-fast);
+  transition: all var(--transition-base);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .dash-modal-close:hover {
-  color: var(--danger);
+  color: var(--white);
+  background: var(--danger);
+  transform: rotate(90deg) scale(1.1);
+  box-shadow: 0 0 15px var(--danger-glow);
 }
 
 .dash-modal-body {
-  padding: var(--space-lg);
+  padding: 2rem;
 }
 
 .dash-modal-footer {
-  padding: var(--space-lg);
+  padding: 1.5rem 2rem;
   border-top: 1px solid var(--border);
   display: flex;
   justify-content: flex-end;
-  gap: var(--space-sm);
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 0 0 24px 24px;
 }
 
-/* Tab contents toggling in admin page */
+/* Beautiful form elements inside modal */
+.dash-modal .form-label {
+  color: var(--white);
+  font-weight: 600;
+  font-size: 0.88rem;
+  margin-bottom: 0.6rem;
+}
+
+.dash-modal .form-control {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  padding: 0.9rem 1.1rem !important;
+  color: var(--white) !important;
+  font-size: 0.92rem !important;
+  transition: all var(--transition-base) !important;
+}
+
+.dash-modal .form-control:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px var(--primary-glow) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+/* Checkbox button styling inside modal */
+.dash-modal label:has(input[type="checkbox"]),
+.dash-modal label:has(input[type="radio"]) {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid var(--border) !important;
+  padding: 0.7rem 0.9rem !important;
+  border-radius: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.6rem !important;
+  font-size: 0.88rem !important;
+  color: var(--text-secondary) !important;
+  cursor: pointer !important;
+  transition: all var(--transition-base) !important;
+  user-select: none;
+}
+
+.dash-modal label:has(input[type="checkbox"]):hover,
+.dash-modal label:has(input[type="radio"]):hover {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-color: rgba(245, 166, 35, 0.25) !important;
+  color: var(--white) !important;
+}
+
+.dash-modal label:has(input[type="checkbox"]:checked),
+.dash-modal label:has(input[type="radio"]:checked) {
+  background: var(--primary-glow) !important;
+  border-color: var(--primary) !important;
+  color: var(--primary-light) !important;
+  box-shadow: 0 0 10px rgba(245, 166, 35, 0.1);
+}
+
+.dash-modal label input[type="checkbox"],
+.dash-modal label input[type="radio"] {
+  accent-color: var(--primary);
+  width: 16px;
+  height: 16px;
+}
+
+/* Image preview styling */
+.dash-modal div[id$="-image-preview"] {
+  border-radius: 12px !important;
+  border: 2px dashed rgba(255, 255, 255, 0.15) !important;
+  transition: all var(--transition-base);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.dash-modal div[id$="-image-preview"]:hover {
+  border-color: var(--primary) !important;
+}
+
+/* File upload input customization */
+.dash-modal input[type="file"] {
+  cursor: pointer;
+  padding: 0.5rem !important;
+}
+.dash-modal input[type="file"]::file-selector-button {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  color: var(--white);
+  padding: 0.4rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  font-weight: 600;
+  margin-right: 1rem;
+}
+.dash-modal input[type="file"]::file-selector-button:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  box-shadow: 0 0 10px var(--primary-glow);
+}
+
+/* ─── TAB CONTENT ─────────────────────────────────────────────── */
 .dash-tab-content {
   display: none;
   animation: fadeIn var(--transition-base);
@@ -335,4 +521,398 @@
 
 .dash-tab-content.active {
   display: block;
+}
+
+.dash-mobile-bar {
+  display: none;
+}
+
+.dash-sidebar-close {
+  display: none;
+}
+
+.dash-sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(5, 5, 10, 0.8);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 1090;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.dash-sidebar-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ================================================================
+   RESPONSIVE BREAKPOINTS — Desktop large (1400px+)
+   ================================================================ */
+@media (min-width: 1400px) {
+  .dash-layout {
+    grid-template-columns: 280px 1fr;
+  }
+  .dash-stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ================================================================
+   RESPONSIVE — Laptop (max 1200px)
+   ================================================================ */
+@media (max-width: 1200px) {
+  .dash-layout {
+    grid-template-columns: 240px 1fr;
+    gap: var(--space-lg);
+  }
+  .dash-stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+  .dash-charts-grid {
+    grid-template-columns: 3fr 2fr;
+  }
+}
+
+/* ================================================================
+   RESPONSIVE — Small Laptop / Large Tablet (max 1024px)
+   ================================================================ */
+@media (max-width: 1024px) {
+  .dash-layout {
+    grid-template-columns: 220px 1fr;
+    gap: var(--space-md);
+  }
+  .dash-sidebar {
+    padding: var(--space-md);
+  }
+  .dash-menu-link {
+    padding: 0.65rem 0.75rem;
+    font-size: 0.88rem;
+  }
+  .dash-charts-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ================================================================
+   RESPONSIVE — Tablet / Mobile (max 900px)
+   Sidebar converts to horizontal top nav
+   ================================================================ */
+@media (max-width: 900px) {
+  .dash-layout {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  /* Sidebar: vertical slide-in drawer */
+  .dash-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    height: 100vh;
+    z-index: 1100;
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border);
+    border-top: none;
+    border-left: none;
+    border-bottom: none;
+    border-radius: 0;
+    padding: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+  }
+
+  .dash-sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Mobile bar and toggle button */
+  .dash-mobile-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: var(--space-md);
+  }
+
+  .dash-sidebar-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--white);
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+  }
+
+  .dash-sidebar-toggle-btn:hover {
+    border-color: var(--primary);
+    background: var(--glass);
+    color: var(--primary);
+  }
+
+  .dash-sidebar-toggle-btn i {
+    color: var(--primary);
+    font-size: 1rem;
+  }
+
+  .dash-sidebar-close {
+    display: block;
+    position: absolute;
+    top: 1rem;
+    right: 1.25rem;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.35rem;
+    cursor: pointer;
+    transition: color var(--transition-fast);
+    z-index: 10;
+  }
+
+  .dash-sidebar-close:hover {
+    color: var(--danger);
+  }
+
+  /* Reset User Profile inside vertical drawer */
+  .dash-user-profile {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: var(--space-md);
+    width: 100%;
+    justify-content: flex-start;
+    text-align: left;
+    flex-direction: row;
+    gap: var(--space-sm);
+  }
+
+  .dash-user-avatar {
+    width: 48px;
+    height: 48px;
+  }
+
+  .dash-user-name {
+    font-size: 0.95rem;
+  }
+
+  .dash-user-role {
+    font-size: 0.75rem;
+  }
+
+  /* Reset Menu to be vertical list inside drawer */
+  .dash-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-bottom: 0;
+    overflow-x: visible;
+  }
+
+  .dash-menu-link {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--space-sm);
+    padding: 0.75rem 1rem;
+    font-size: 0.92rem;
+    text-align: left;
+    white-space: nowrap;
+    border-radius: var(--radius-md);
+    min-width: 0;
+  }
+
+  .dash-menu-link i {
+    font-size: 1rem;
+    width: 20px;
+  }
+
+  /* Content area */
+  .dash-content {
+    gap: var(--space-md);
+  }
+
+  .dash-page-title {
+    font-size: 1.3rem;
+  }
+
+  /* Charts: stack */
+  .dash-charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Stats: 2-col auto */
+  .dash-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Table: ensure scroll works */
+  .table-wrapper {
+    border-radius: var(--radius-sm);
+  }
+
+  .dash-modal-container {
+    max-width: 95%;
+    max-height: 90vh;
+  }
+
+  .dash-modal-body,
+  .dash-modal-header,
+  .dash-modal-footer {
+    padding: var(--space-md);
+  }
+}
+
+/* ================================================================
+   RESPONSIVE — Mobile (max 640px)
+   ================================================================ */
+@media (max-width: 640px) {
+  /* Stats: 2 fixed columns */
+  .dash-stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .stat-widget {
+    padding: 0.75rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .stat-widget-icon {
+    order: -1;
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+    margin-left: 0;
+    margin-bottom: 2px;
+  }
+
+  .stat-widget-info h3 {
+    font-size: 1.35rem;
+  }
+
+  .stat-widget-info p {
+    font-size: 0.68rem;
+  }
+
+  /* Chart cards: more compact */
+  .chart-card {
+    padding: 0.75rem;
+  }
+
+  .chart-card-title {
+    font-size: 0.88rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Tables: smaller text */
+  .dash-table th {
+    padding: 0.6rem 0.6rem;
+    font-size: 0.72rem;
+  }
+
+  .dash-table td {
+    padding: 0.6rem 0.6rem;
+    font-size: 0.78rem;
+  }
+
+  /* Table images: smaller */
+  .table-user-img {
+    width: 26px;
+    height: 26px;
+  }
+
+  .table-user-name {
+    font-size: 0.8rem;
+  }
+
+  .table-user-email {
+    font-size: 0.68rem;
+  }
+
+  /* Modal: compact */
+  .dash-modal-title {
+    font-size: 1rem;
+  }
+
+  .dash-modal-footer {
+    flex-direction: column;
+  }
+
+  .dash-modal-footer .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Content gap */
+  .dash-content {
+    gap: 0.75rem;
+  }
+
+  .dash-page-title {
+    font-size: 1.15rem;
+  }
+
+  .dash-page-desc {
+    font-size: 0.78rem;
+  }
+}
+
+/* ================================================================
+   RESPONSIVE — Small Phone (max 420px)
+   ================================================================ */
+@media (max-width: 420px) {
+  /* Stats: 1 column on tiny screens */
+  .dash-stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .stat-widget {
+    padding: 0.6rem;
+  }
+
+  .stat-widget-info h3 {
+    font-size: 1.2rem;
+  }
+
+  .stat-widget-info p {
+    font-size: 0.62rem;
+    letter-spacing: 0;
+  }
+
+  .stat-widget-icon {
+    width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
+  }
+
+
+
+  /* Table: minimal padding */
+  .dash-table th,
+  .dash-table td {
+    padding: 0.5rem 0.5rem;
+    font-size: 0.72rem;
+  }
+
+  .chart-card {
+    padding: 0.6rem;
+  }
 }

@@ -55,6 +55,8 @@ for ($n = 5; $n >= 1; $n--) {
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="../image/favicon.png">
+  <link rel="apple-touch-icon" href="../image/favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Avis Clients — Immo-Location</title>
   <meta name="description" content="Lisez les avis vérifiés de nos clients sur nos biens immobiliers et voitures de location au Maroc.">
@@ -281,21 +283,47 @@ for ($n = 5; $n >= 1; $n--) {
 
           if ($note_post >= 1 && $note_post <= 5 && $comm_post && $type_post && $cible_id) {
               $uid  = $_SESSION['user_id'];
-              $bien_id = $type_post === 'bien' ? $cible_id : 'NULL';
-              $voit_id = $type_post === 'voiture' ? $cible_id : 'NULL';
               // Vérifie qu'il a une réservation confirmée
               $check = mysqli_fetch_assoc(mysqli_query($conn,
                 "SELECT id FROM reservations WHERE client_id=$uid AND statut IN ('confirmee','terminee') 
                  AND " . ($type_post === 'bien' ? "bien_id=$cible_id" : "voiture_id=$cible_id") . " LIMIT 1"));
               if ($check) {
-                  $stmt = mysqli_prepare($conn, "INSERT INTO avis (auteur_id, type_cible, bien_id, voiture_id, note, commentaire) VALUES (?,?,?,?,?,?)");
-                  mysqli_stmt_bind_param($stmt,'ssiiii',$uid,$type_post,$bien_id,$voit_id,$note_post,$comm_post);
-                  // Note: correct binding below
-                  $stmt2 = mysqli_prepare($conn, "INSERT INTO avis (auteur_id, type_cible, bien_id, voiture_id, note, commentaire) VALUES (?,?,?,?,?,?)");
-                  mysqli_stmt_bind_param($stmt2,'ssisss',$uid,$type_post,$bien_id,$voit_id,$note_post,$comm_post);
-                  mysqli_query($conn, "INSERT INTO avis (auteur_id, type_cible, bien_id, voiture_id, note, commentaire)
-                    VALUES ($uid, '$type_post', " . ($type_post === 'bien' ? $cible_id : 'NULL') . ", " . ($type_post === 'voiture' ? $cible_id : 'NULL') . ", $note_post, '" . mysqli_real_escape_string($conn, $comm_post) . "')");
-                  $msg_avis = 'success';
+                  $stmt = mysqli_prepare($conn, "INSERT INTO avis (auteur_id, type_cible, bien_id, voiture_id, note, commentaire) VALUES (?, ?, ?, ?, ?, ?)");
+                  $bind_bien = $type_post === 'bien' ? $cible_id : null;
+                  $bind_voit = $type_post === 'voiture' ? $cible_id : null;
+                  mysqli_stmt_bind_param($stmt, 'isiiss', $uid, $type_post, $bind_bien, $bind_voit, $note_post, $comm_post);
+                  
+                  if (mysqli_stmt_execute($stmt)) {
+                      $msg_avis = 'success';
+                      
+                      // Recalculate average note and total count for target
+                      $table = ($type_post === 'bien') ? 'biens' : 'voitures';
+                      $id_col = ($type_post === 'bien') ? 'bien_id' : 'voiture_id';
+
+                      $stats_q = mysqli_query($conn, "SELECT COUNT(*) as cnt, AVG(note) as avg_rating FROM avis WHERE type_cible = '$type_post' AND $id_col = $cible_id AND statut = 'actif'");
+                      $stats = mysqli_fetch_assoc($stats_q);
+                      $cnt = $stats['cnt'] ?? 0;
+                      $avg_rating = round($stats['avg_rating'] ?? 0, 2);
+
+                      mysqli_query($conn, "UPDATE $table SET note_moyenne = $avg_rating, nb_avis = $cnt WHERE id = $cible_id");
+
+                      // Notify owner
+                      $owner_q = mysqli_query($conn, "SELECT proprietaire_id, " . ($type_post === 'bien' ? 'titre as title' : "CONCAT(marque, ' ', modele) as title") . " FROM $table WHERE id = $cible_id");
+                      $owner_data = mysqli_fetch_assoc($owner_q);
+                      if ($owner_data) {
+                          $owner_id = $owner_data['proprietaire_id'];
+                          $item_title = $owner_data['title'];
+                          $notif_title = "Nouvel avis reçu";
+                          $notif_msg = "Un client a laissé un avis (" . $note_post . "/5) sur \"" . $item_title . "\".";
+                          $notif_type = "avis";
+                          
+                          $notif_stmt = mysqli_prepare($conn, "INSERT INTO notifications (utilisateur_id, titre, message, type) VALUES (?, ?, ?, ?)");
+                          mysqli_stmt_bind_param($notif_stmt, 'isss', $owner_id, $notif_title, $notif_msg, $notif_type);
+                          mysqli_stmt_execute($notif_stmt);
+                      }
+                  } else {
+                      $msg_avis = 'error';
+                  }
               } else {
                   $msg_avis = 'no_reservation';
               }
@@ -328,16 +356,19 @@ for ($n = 5; $n >= 1; $n--) {
       </p>
 
       <?php if ($msg_avis === 'success'): ?>
-        <div style="background:var(--success-glow);border:1px solid var(--success);border-radius:8px;padding:1rem;color:var(--success);margin-bottom:1rem;">
-          <i class="fa-solid fa-circle-check"></i> Votre avis a été publié avec succès ! Merci.
+        <div class="alert alert-avis success" style="background:rgba(0,212,170,0.12);border:1px solid rgba(0,212,170,0.35);border-radius:12px;padding:1rem 1.25rem;color:var(--success);margin-bottom:1rem;display:flex;align-items:center;gap:0.75rem;">
+          <i class="fa-solid fa-circle-check" style="font-size:1.2rem;"></i>
+          <div><strong>Avis publié !</strong> Votre avis a été publié avec succès. Merci pour votre contribution.</div>
         </div>
       <?php elseif ($msg_avis === 'no_reservation'): ?>
-        <div style="background:rgba(255,77,109,0.1);border:1px solid var(--danger);border-radius:8px;padding:1rem;color:var(--danger);margin-bottom:1rem;">
-          <i class="fa-solid fa-triangle-exclamation"></i> Vous devez avoir une réservation confirmée pour cet article.
+        <div class="alert alert-avis danger" style="background:rgba(255,77,109,0.12);border:1px solid rgba(255,77,109,0.35);border-radius:12px;padding:1rem 1.25rem;color:var(--danger);margin-bottom:1rem;display:flex;align-items:center;gap:0.75rem;">
+          <i class="fa-solid fa-triangle-exclamation" style="font-size:1.2rem;"></i>
+          <div><strong>Réservation requise</strong> — Vous devez avoir une réservation confirmée pour cet article avant de laisser un avis.</div>
         </div>
       <?php elseif ($msg_avis === 'error'): ?>
-        <div style="background:rgba(255,77,109,0.1);border:1px solid var(--danger);border-radius:8px;padding:1rem;color:var(--danger);margin-bottom:1rem;">
-          <i class="fa-solid fa-triangle-exclamation"></i> Veuillez remplir tous les champs.
+        <div class="alert alert-avis danger" style="background:rgba(255,77,109,0.12);border:1px solid rgba(255,77,109,0.35);border-radius:12px;padding:1rem 1.25rem;color:var(--danger);margin-bottom:1rem;display:flex;align-items:center;gap:0.75rem;">
+          <i class="fa-solid fa-circle-exclamation" style="font-size:1.2rem;"></i>
+          <div><strong>Champs incomplets</strong> — Veuillez remplir tous les champs obligatoires et choisir une note.</div>
         </div>
       <?php endif; ?>
 

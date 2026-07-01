@@ -50,7 +50,9 @@ if (isset($_SESSION['user_id'])) {
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="../image/favicon.png">
+  <link rel="apple-touch-icon" href="../image/favicon.png"><meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Connexion — Immo-Location</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -86,6 +88,9 @@ if (isset($_SESSION['user_id'])) {
 
   <!-- Right panel (form) -->
   <div class="auth-right">
+    <a href="acceuil.php" class="auth-back-home">
+      <i class="fa-solid fa-arrow-left"></i> Retour à l'accueil
+    </a>
     <div class="auth-form-wrapper">
       <div class="auth-form-header">
         <h1>Bon retour ! 👋</h1>

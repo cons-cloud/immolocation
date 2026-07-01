@@ -218,6 +218,16 @@
 }
 
 @media (max-width: 768px) {
+  .search-tabs {
+    flex-wrap: wrap;
+  }
+  .search-tab {
+    flex: 1;
+    justify-content: center;
+    font-size: 0.8rem;
+    padding: 0.5rem 0.8rem;
+    white-space: nowrap;
+  }
   .search-form {
     flex-direction: column;
     border-radius: 14px;

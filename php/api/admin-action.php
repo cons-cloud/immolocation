@@ -42,15 +42,31 @@ if ($action === 'user_status') {
     $status = $_POST['status'] ?? '';
     
     if ($res_id > 0 && in_array($status, ['en_attente', 'confirmee', 'annulee', 'terminee'])) {
-        $stmt = mysqli_prepare($conn, "UPDATE reservations SET statut = ? WHERE id = ?");
-        mysqli_stmt_bind_param($stmt, 'si', $status, $res_id);
-        if (mysqli_stmt_execute($stmt)) {
-            // Also if cancelled, remove dates from disponibilites
-            if ($status === 'annulee') {
-                mysqli_query($conn, "DELETE FROM disponibilites WHERE raison='reservation' AND type_ressource=(SELECT type_reservation FROM reservations WHERE id=$res_id) AND ressource_id=IFNULL((SELECT bien_id FROM reservations WHERE id=$res_id), (SELECT voiture_id FROM reservations WHERE id=$res_id))");
+        // Fetch booking info first to get target, type, and dates for proper deletion
+        $check_q = mysqli_query($conn, "SELECT type_reservation, bien_id, voiture_id, date_debut, date_fin FROM reservations WHERE id = $res_id");
+        $booking = mysqli_fetch_assoc($check_q);
+        
+        if ($booking) {
+            $stmt = mysqli_prepare($conn, "UPDATE reservations SET statut = ? WHERE id = ?");
+            mysqli_stmt_bind_param($stmt, 'si', $status, $res_id);
+            if (mysqli_stmt_execute($stmt)) {
+                // If cancelled, remove dates from disponibilites
+                if ($status === 'annulee') {
+                    $target_id = ($booking['type_reservation'] === 'bien') ? $booking['bien_id'] : $booking['voiture_id'];
+                    $del_disp = mysqli_prepare($conn, "
+                        DELETE FROM disponibilites 
+                        WHERE raison='reservation' 
+                          AND type_ressource = ? 
+                          AND ressource_id = ? 
+                          AND date_debut = ? 
+                          AND date_fin = ?
+                    ");
+                    mysqli_stmt_bind_param($del_disp, 'siss', $booking['type_reservation'], $target_id, $booking['date_debut'], $booking['date_fin']);
+                    mysqli_stmt_execute($del_disp);
+                }
+                echo json_encode(['success' => true]);
+                exit();
             }
-            echo json_encode(['success' => true]);
-            exit();
         }
     }
 }

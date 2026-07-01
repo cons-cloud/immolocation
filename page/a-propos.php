@@ -12,6 +12,8 @@ $nb_reserv     = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FR
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="../image/favicon.png">
+  <link rel="apple-touch-icon" href="../image/favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>À Propos — Immo-Location</title>
   <meta name="description" content="Découvrez Immo-Location, la plateforme de référence pour la location immobilière et automobile au Maroc. Notre histoire, nos valeurs et notre équipe.">

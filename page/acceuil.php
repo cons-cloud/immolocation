@@ -28,6 +28,8 @@ $avis_recents = mysqli_query($conn, "
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="../image/favicon.png">
+  <link rel="apple-touch-icon" href="../image/favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Immo-Location — Location Immobilière & Automobile Premium au Maroc</title>
   <meta name="description" content="Trouvez votre appartement, villa ou voiture de location idéale au Maroc. Réservation simple, paiement sécurisé, service premium.">

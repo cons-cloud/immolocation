@@ -63,6 +63,8 @@ if (isset($_SESSION['user_id'])) {
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="../image/favicon.png">
+  <link rel="apple-touch-icon" href="../image/favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?php echo htmlspecialchars($bien['titre']); ?> — Immo-Location</title>
   <meta name="description" content="<?php echo htmlspecialchars(substr($bien['description'], 0, 150)); ?>">

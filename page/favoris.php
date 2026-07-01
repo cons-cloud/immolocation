@@ -33,6 +33,8 @@ $top_voit  = mysqli_query($conn, "SELECT * FROM voitures WHERE statut='actif' OR
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="../image/favicon.png">
+  <link rel="apple-touch-icon" href="../image/favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mes Favoris — Immo-Location</title>
   <meta name="description" content="Sauvegardez vos biens et voitures préférés sur Immo-Location pour les retrouver facilement.">

@@ -68,6 +68,8 @@ $total_pages = $type !== 'tous' ? ceil(($type === 'bien' ? $total_b : $total_v) 
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="../image/favicon.png">
+  <link rel="apple-touch-icon" href="../image/favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Recherche<?php echo $q ? ' — '.htmlspecialchars($q) : ''; ?> — Immo-Location</title>
   <meta name="description" content="Recherchez parmi nos biens immobiliers et voitures disponibles à la location au Maroc.">
