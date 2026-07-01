@@ -3,8 +3,11 @@ FROM php:8.2-apache
 # Extensions PHP nécessaires
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-# Activer mod_rewrite
-RUN a2enmod rewrite
+# Activer mod_rewrite et configurer le MPM correct
+RUN a2enmod rewrite \
+    && a2dismod mpm_event || true \
+    && a2dismod mpm_worker || true \
+    && a2enmod mpm_prefork || true
 
 # Configurer Apache pour pointer vers la racine du projet
 ENV APACHE_DOCUMENT_ROOT /var/www/html
